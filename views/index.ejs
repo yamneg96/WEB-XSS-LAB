@@ -1,0 +1,78 @@
+<%- include('partials/header', { title: 'XSS Lab - Home' }) %>
+
+<div class="jumbotron">
+    <h1 class="display-4">Welcome to the XSS Lab</h1>
+    <p class="lead">Learn about Cross-Site Scripting (XSS) vulnerabilities and how to prevent them.</p>
+    <hr class="my-4">
+    <p>This lab demonstrates different types of XSS vulnerabilities and their secure implementations.</p>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Level 1: Reflected XSS</h5>
+                <p class="card-text">Learn about reflected XSS attacks through a simple search functionality.</p>
+                <a href="/level1/vulnerable" class="btn btn-danger mb-2 w-100">Vulnerable Version</a>
+                <a href="/level1/secure" class="btn btn-success w-100">Secure Version</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Level 2: Stored XSS</h5>
+                <p class="card-text">Explore stored XSS vulnerabilities in a comment system.</p>
+                <a href="/level2/vulnerable" class="btn btn-danger mb-2 w-100">Vulnerable Version</a>
+                <a href="/level2/secure" class="btn btn-success w-100">Secure Version</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Level 3: JS Attribute Injection</h5>
+                <p class="card-text">Discover how JavaScript attribute injection can lead to XSS attacks.</p>
+                <a href="/level3/vulnerable" class="btn btn-danger mb-2 w-100">Vulnerable Version</a>
+                <a href="/level3/secure" class="btn btn-success w-100">Secure Version</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Level 4: DOM-Based XSS</h5>
+                <p class="card-text">See how client-side JavaScript can create XSS vulnerabilities.</p>
+                <a href="/level4/vulnerable" class="btn btn-danger mb-2 w-100">Vulnerable Version</a>
+                <a href="/level4/secure" class="btn btn-success w-100">Secure Version</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Level 5: XSS via eval()</h5>
+                <p class="card-text">Understand the dangers of using eval() on user input.</p>
+                <a href="/level5/vulnerable" class="btn btn-danger mb-2 w-100">Vulnerable Version</a>
+                <a href="/level5/secure" class="btn btn-success w-100">Secure Version</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Level 6: Follow the Rabbit (Advanced DOM-Based XSS)</h5>
+                <p class="card-text">Exploit DOM-based XSS where payload is injected directly into JavaScript code from URL parameters.</p>
+                <a href="/level6/vulnerable" class="btn btn-danger mb-2 w-100">Vulnerable Version</a>
+                <a href="/level6/secure" class="btn btn-success w-100">Secure Version</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="alert alert-warning mt-4">
+    <h4 class="alert-heading">⚠️ Warning</h4>
+    <p>This lab is for educational purposes only. The vulnerable versions are intentionally insecure to demonstrate XSS attacks. Never implement these vulnerable patterns in production code.</p>
+</div>
+
+<%- include('partials/footer') %> 

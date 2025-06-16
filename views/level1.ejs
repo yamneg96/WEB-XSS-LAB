@@ -1,0 +1,95 @@
+<%- include('partials/header', { title: 'Level 1 - Reflected XSS' }) %>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header bg-danger text-white">
+                <h5 class="mb-0">Vulnerable Version</h5>
+            </div>
+            <div class="card-body">
+                <h6 class="card-subtitle mb-2 text-muted">Search Box (Vulnerable)</h6>
+                <form action="/level1" method="GET" class="mb-3">
+                    <div class="input-group">
+                        <input type="text" name="q" class="form-control" placeholder="Enter search term...">
+                        <button class="btn btn-primary" type="submit">Search</button>
+                    </div>
+                </form>
+                <div id="vulnerable-result" class="mt-3">
+                    <% if (query) { %>
+                        <div class="alert alert-info">
+                            <strong>Search Results for:</strong>
+                            <div id="vulnerable-output"><%= query %></div>
+                        </div>
+                    <% } %>
+                </div>
+                <div class="mt-3">
+                    <h6>Try this payload:</h6>
+                    <code>&lt;script&gt;alert('XSS')&lt;/script&gt;</code>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">Secure Version</h5>
+            </div>
+            <div class="card-body">
+                <h6 class="card-subtitle mb-2 text-muted">Search Box (Secure)</h6>
+                <form action="/level1" method="GET" class="mb-3">
+                    <div class="input-group">
+                        <input type="text" name="q" class="form-control" placeholder="Enter search term...">
+                        <button class="btn btn-primary" type="submit">Search</button>
+                    </div>
+                </form>
+                <div id="secure-result" class="mt-3">
+                    <% if (query) { %>
+                        <div class="alert alert-info">
+                            <strong>Search Results for:</strong>
+                            <div id="secure-output"><%= query %></div>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">How It Works</h5>
+            </div>
+            <div class="card-body">
+                <h6>Vulnerable Version:</h6>
+                <pre><code>// Vulnerable code uses innerHTML
+document.getElementById('vulnerable-output').innerHTML = userInput;</code></pre>
+
+                <h6>Secure Version:</h6>
+                <pre><code>// Secure code uses textContent
+document.getElementById('secure-output').textContent = userInput;</code></pre>
+
+                <div class="alert alert-info mt-3">
+                    <h6>Key Points:</h6>
+                    <ul>
+                        <li>The vulnerable version uses <code>innerHTML</code> which allows HTML and JavaScript execution</li>
+                        <li>The secure version uses <code>textContent</code> which treats input as plain text</li>
+                        <li>Always use <code>textContent</code> when displaying user input unless you specifically need HTML</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Vulnerable version
+    document.getElementById('vulnerable-output')?.innerHTML = '<%= query %>';
+    
+    // Secure version
+    document.getElementById('secure-output')?.textContent = '<%= query %>';
+</script>
+
+<%- include('partials/footer') %> 

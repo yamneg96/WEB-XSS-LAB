@@ -1,0 +1,83 @@
+<%- include('partials/header', { title: 'Level 6 - DOM-Based XSS (Vulnerable)', mode: 'vulnerable' }) %>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card mb-4">
+            <div class="card-header bg-danger text-white d-flex justify-content-between align-items-center">
+                <span>Vulnerable Version</span>
+                <a href="/level6/secure" class="btn btn-outline-light btn-sm">Go to Secure Version</a>
+            </div>
+            <div class="card-body">
+                <h6 class="card-subtitle mb-2 text-muted">Background Color Changer (Vulnerable)</h6>
+                <form id="level6VulnerableForm" class="mb-3">
+                    <div class="input-group">
+                        <input type="text" id="level6VulnerableInput" class="form-control" placeholder="Enter color (e.g., red, #ccc) or payload...">
+                        <button class="btn btn-primary" type="submit">Set Color</button>
+                    </div>
+                </form>
+                <div class="mt-3">
+                    <h6>Try this payload (in URL hash):</h6>
+                    <code>#');alert('XSS Level 6: DOM JS Context');//</code>
+                    <p class="mt-2">Click 'Set Color' or manually type in URL after #</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">How It Works</h5>
+            </div>
+            <div class="card-body">
+                <h6>Vulnerable Version:</h6>
+                <pre><code>// Vulnerable code directly injects URL hash into JS context
+var color = location.hash.substring(1);
+document.body.style.backgroundColor = color; // Injects raw, unescaped
+// Payload: #');alert('XSS');//
+// Result: document.body.style.backgroundColor = '');alert('XSS');//
+</code></pre>
+                <div class="alert alert-info mt-3">
+                    <h6>Key Points:</h6>
+                    <ul>
+                        <li>XSS occurs when unescaped user input is directly used within JavaScript code.</li>
+                        <li>No HTML tags are needed for the payload; the attack lives purely in JS context.</li>
+                        <li>Payload breaks out of a string literal and injects new statements.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function setBackgroundColorFromHash() {
+        const color = window.location.hash.substring(1);
+        console.log("Level 6 Vulnerable: Raw hash value:", color);
+
+        try {
+            // Intentionally vulnerable: directly using unescaped input in JS
+            eval(`document.body.style.backgroundColor = '${color}';`); // Use eval to directly inject and execute JS
+            console.log("Level 6 Vulnerable: Executed color change with:", color);
+        } catch (e) {
+            console.error("Level 6 Vulnerable: Error executing payload:", e);
+            document.body.style.backgroundColor = ''; // Reset on error
+        }
+    }
+
+    // Handle form submission: update hash
+    document.getElementById('level6VulnerableForm').onsubmit = function(e) {
+        e.preventDefault();
+        const userInput = document.getElementById('level6VulnerableInput').value;
+        window.location.hash = userInput; // Set hash directly, unencoded
+        // The setBackgroundColorFromHash will re-run on hash change
+    };
+
+    // Initial load or hash change
+    window.onhashchange = setBackgroundColorFromHash;
+    setBackgroundColorFromHash(); // Initial call
+</script>
+
+<%- include('partials/footer') %> 

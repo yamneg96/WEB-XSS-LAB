@@ -1,0 +1,92 @@
+<%- include('partials/header', { title: 'Level 6 - DOM-Based XSS (Secure)', mode: 'secure' }) %>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card mb-4">
+            <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                <span>Secure Version</span>
+                <a href="/level6/vulnerable" class="btn btn-outline-light btn-sm">Go to Vulnerable Version</a>
+            </div>
+            <div class="card-body">
+                <h6 class="card-subtitle mb-2 text-muted">Background Color Changer (Secure)</h6>
+                <form id="level6SecureForm" class="mb-3">
+                    <div class="input-group">
+                        <input type="text" id="level6SecureInput" class="form-control" placeholder="Enter color (e.g., red, #ccc) or payload...">
+                        <button class="btn btn-success" type="submit">Set Color</button>
+                    </div>
+                </form>
+                <div class="mt-3">
+                    <h6>Try the same payload (in URL hash):</h6>
+                    <code>#');alert('XSS Level 6: DOM JS Context');//</code>
+                    <p class="mt-2">Observe how it's safely handled.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">How It Works</h5>
+            </div>
+            <div class="card-body">
+                <h6>Secure Version:</h6>
+                <pre><code>// Secure code uses proper JavaScript escaping
+var color = location.hash.substring(1);
+// Escaping input to prevent breaking out of string literal
+var escapedColor = JSON.stringify(color).slice(1, -1); // Simple JS string escaping
+document.body.style.backgroundColor = escapedColor;
+</code></pre>
+                <div class="alert alert-info mt-3">
+                    <h6>Key Points:</h6>
+                    <ul>
+                        <li>User input is properly escaped before being used in JavaScript context.</li>
+                        <li>`JSON.stringify()` can be a useful way to safely encode strings for JavaScript.</li>
+                        <li>This prevents the payload from breaking out of its intended context.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function setBackgroundColorFromHashSecure() {
+        const color = window.location.hash.substring(1);
+        console.log("Level 6 Secure: Raw hash value:", color);
+
+        try {
+            // Secure: Properly escape the input for JavaScript context
+            // A robust solution would involve a dedicated JS escaping library
+            // For demonstration, we'll use JSON.stringify as a simple example
+            const escapedColor = JSON.stringify(color);
+            // Note: JSON.stringify adds quotes, so we inject it directly as a string literal
+            // If we were injecting into a pre-existing string, we'd slice off the quotes.
+            // Here, we just want to ensure the value itself is safe.
+            
+            // This line is now secure because escapedColor is a safe string literal
+            document.body.style.backgroundColor = JSON.parse(escapedColor); // Parse back to unquoted string
+            console.log("Level 6 Secure: Executed color change with safe value:", JSON.parse(escapedColor));
+        } catch (e) {
+            console.error("Level 6 Secure: Error setting color securely:", e);
+            document.body.style.backgroundColor = ''; // Reset on error
+        }
+    }
+
+    // Handle form submission: update hash
+    document.getElementById('level6SecureForm').onsubmit = function(e) {
+        e.preventDefault();
+        const userInput = document.getElementById('level6SecureInput').value;
+        // For secure version, we might want to encode the hash, but for demo, let it be raw
+        // The JS handling will ensure safety
+        window.location.hash = userInput;
+    };
+
+    // Initial load or hash change
+    window.onhashchange = setBackgroundColorFromHashSecure;
+    setBackgroundColorFromHashSecure(); // Initial call
+</script>
+
+<%- include('partials/footer') %> 

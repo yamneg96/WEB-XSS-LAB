@@ -1,0 +1,126 @@
+<%- include('partials/header', { title: 'Level 3 - JavaScript Attribute Injection' }) %>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header bg-danger text-white">
+                <h5 class="mb-0">Vulnerable Version</h5>
+            </div>
+            <div class="card-body">
+                <h6 class="card-subtitle mb-2 text-muted">Timer (Vulnerable)</h6>
+                <form action="/level3" method="GET" class="mb-3">
+                    <div class="input-group">
+                        <input type="text" name="timer" class="form-control" placeholder="Enter seconds...">
+                        <button class="btn btn-primary" type="submit">Create Timer</button>
+                    </div>
+                </form>
+                <div id="vulnerable-timer" class="mt-3">
+                    <% if (timerValue) { %>
+                        <div class="alert alert-info">
+                            <img src="/images/loading.gif" onload="startTimer('<%= timerValue %>')" style="display: none;">
+                            <div id="vulnerable-timer-display">Timer: <span id="vulnerable-countdown">0</span>s</div>
+                        </div>
+                    <% } %>
+                </div>
+                <div class="mt-3">
+                    <h6>Try this payload:</h6>
+                    <code>3');alert('XSS</code>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">Secure Version</h5>
+            </div>
+            <div class="card-body">
+                <h6 class="card-subtitle mb-2 text-muted">Timer (Secure)</h6>
+                <form action="/level3" method="GET" class="mb-3">
+                    <div class="input-group">
+                        <input type="number" name="timer" class="form-control" placeholder="Enter seconds..." min="1" max="60">
+                        <button class="btn btn-primary" type="submit">Create Timer</button>
+                    </div>
+                </form>
+                <div id="secure-timer" class="mt-3">
+                    <% if (timerValue) { %>
+                        <div class="alert alert-info">
+                            <div id="secure-timer-display">Timer: <span id="secure-countdown">0</span>s</div>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">How It Works</h5>
+            </div>
+            <div class="card-body">
+                <h6>Vulnerable Version:</h6>
+                <pre><code>// Vulnerable code directly injects user input into JavaScript
+<img src="loading.gif" onload="startTimer('<%= timerValue %>')"></code></pre>
+
+                <h6>Secure Version:</h6>
+                <pre><code>// Secure code validates input and uses proper event handling
+if (isValidNumber(timerValue)) {
+    startTimer(parseInt(timerValue));
+}</code></pre>
+
+                <div class="alert alert-info mt-3">
+                    <h6>Key Points:</h6>
+                    <ul>
+                        <li>The vulnerable version directly injects user input into JavaScript attributes</li>
+                        <li>The secure version validates input and uses proper type conversion</li>
+                        <li>Always validate and sanitize user input before using it in JavaScript</li>
+                        <li>Use proper input types (number) and validation on the client side</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Vulnerable version
+    function startTimer(seconds) {
+        let countdown = seconds;
+        const display = document.getElementById('vulnerable-countdown');
+        
+        const timer = setInterval(() => {
+            display.textContent = countdown;
+            if (countdown <= 0) {
+                clearInterval(timer);
+                display.textContent = 'Done!';
+            }
+            countdown--;
+        }, 1000);
+    }
+
+    // Secure version
+    function isValidNumber(value) {
+        return !isNaN(value) && value > 0 && value <= 60;
+    }
+
+    const secureTimerValue = '<%= timerValue %>';
+    if (isValidNumber(secureTimerValue)) {
+        const countdown = parseInt(secureTimerValue);
+        const display = document.getElementById('secure-countdown');
+        
+        const timer = setInterval(() => {
+            display.textContent = countdown;
+            if (countdown <= 0) {
+                clearInterval(timer);
+                display.textContent = 'Done!';
+            }
+            countdown--;
+        }, 1000);
+    }
+</script>
+
+<%- include('partials/footer') %> 

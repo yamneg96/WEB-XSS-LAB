@@ -1,0 +1,67 @@
+<%- include('partials/header', { title: 'Level 4 - DOM-Based XSS (Vulnerable)', mode: 'vulnerable' }) %>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card mb-4">
+            <div class="card-header bg-danger text-white d-flex justify-content-between align-items-center">
+                <span>Vulnerable Version</span>
+                <a href="/level4/secure" class="btn btn-outline-light btn-sm">Go to Secure Version</a>
+            </div>
+            <div class="card-body">
+                <h6 class="card-subtitle mb-2 text-muted">DOM-Based XSS (Vulnerable)</h6>
+                <form id="searchForm" class="mb-3">
+                    <div class="input-group">
+                        <input type="text" id="searchInput" name="q" class="form-control" placeholder="Enter search term...">
+                        <button class="btn btn-primary" type="submit">Search</button>
+                    </div>
+                </form>
+                <div id="dom-xss-result" class="mt-3"></div>
+                <div class="mt-3">
+                    <h6>Try this payload:</h6>
+                    <code>&lt;script&gt;alert('DOM XSS')&lt;/script&gt;</code>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">How It Works</h5>
+            </div>
+            <div class="card-body">
+                <h6>Vulnerable Version:</h6>
+                <pre><code>// Vulnerable code uses innerHTML
+const params = new URLSearchParams(window.location.search);
+document.getElementById('dom-xss-result').innerHTML = params.get('q');</code></pre>
+                <div class="alert alert-info mt-3">
+                    <h6>Key Points:</h6>
+                    <ul>
+                        <li>All logic is client-side, no backend involved</li>
+                        <li>Blindly injects user input from URL into DOM using <code>innerHTML</code></li>
+                        <li>Payload executes instantly in the browser</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // On page load, reflect #q= param using innerHTML (vulnerable)
+    const q = window.location.hash.substring(window.location.hash.indexOf('q=') + 2);
+    if (q) {
+        document.getElementById('dom-xss-result').innerHTML = decodeURIComponent(q);
+        console.log("Level 4 Vulnerable: Injected hash value:", decodeURIComponent(q));
+    }
+    // Form handler to update hash
+    document.getElementById('searchForm').onsubmit = function(e) {
+        e.preventDefault();
+        const value = document.getElementById('searchInput').value;
+        window.location.hash = 'q=' + value; // Intentionally vulnerable: no encoding when setting hash
+    };
+</script>
+
+<%- include('partials/footer') %> 

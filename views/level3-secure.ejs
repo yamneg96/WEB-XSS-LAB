@@ -1,0 +1,74 @@
+<%- include('partials/header', { title: 'Level 3 - JS Attribute Injection (Secure)', mode: 'secure' }) %>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card mb-4">
+            <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                <span>Secure Version</span>
+                <a href="/level3/vulnerable" class="btn btn-outline-light btn-sm">Go to Vulnerable Version</a>
+            </div>
+            <div class="card-body">
+                <h6 class="card-subtitle mb-2 text-muted">Timer (Secure)</h6>
+                <form action="/level3/secure" method="GET" class="mb-3">
+                    <div class="input-group">
+                        <input type="number" name="timer" class="form-control" placeholder="Enter seconds..." min="1" max="60">
+                        <button class="btn btn-primary" type="submit">Create Timer</button>
+                    </div>
+                </form>
+                <div id="secure-timer" class="mt-3">
+                    <% if (timerValue) { %>
+                        <div class="alert alert-info">
+                            <div id="secure-timer-display">Timer: <span id="secure-countdown">0</span>s</div>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">How It Works</h5>
+            </div>
+            <div class="card-body">
+                <h6>Secure Version:</h6>
+                <pre><code>// Secure code validates input and uses proper event handling
+if (isValidNumber(timerValue)) {
+    startTimer(parseInt(timerValue));
+}</code></pre>
+                <div class="alert alert-info mt-3">
+                    <h6>Key Points:</h6>
+                    <ul>
+                        <li>The secure version validates input and uses proper type conversion</li>
+                        <li>Always validate and sanitize user input before using it in JavaScript</li>
+                        <li>Use proper input types (number) and validation on the client side</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function isValidNumber(value) {
+        return !isNaN(value) && value > 0 && value <= 60;
+    }
+    const secureTimerValue = '<%= timerValue %>';
+    if (isValidNumber(secureTimerValue)) {
+        let countdown = parseInt(secureTimerValue);
+        const display = document.getElementById('secure-countdown');
+        const timer = setInterval(() => {
+            display.textContent = countdown;
+            if (countdown <= 0) {
+                clearInterval(timer);
+                display.textContent = 'Done!';
+            }
+            countdown--;
+        }, 1000);
+    }
+</script>
+
+<%- include('partials/footer') %> 

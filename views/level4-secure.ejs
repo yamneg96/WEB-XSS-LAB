@@ -1,0 +1,63 @@
+<%- include('partials/header', { title: 'Level 4 - DOM-Based XSS (Secure)', mode: 'secure' }) %>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card mb-4">
+            <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                <span>Secure Version</span>
+                <a href="/level4/vulnerable" class="btn btn-outline-light btn-sm">Go to Vulnerable Version</a>
+            </div>
+            <div class="card-body">
+                <h6 class="card-subtitle mb-2 text-muted">DOM-Based XSS (Secure)</h6>
+                <form id="searchForm" class="mb-3">
+                    <div class="input-group">
+                        <input type="text" id="searchInput" name="q" class="form-control" placeholder="Enter search term...">
+                        <button class="btn btn-primary" type="submit">Search</button>
+                    </div>
+                </form>
+                <div id="dom-xss-result" class="mt-3"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">How It Works</h5>
+            </div>
+            <div class="card-body">
+                <h6>Secure Version:</h6>
+                <pre><code>// Secure code uses textContent
+const params = new URLSearchParams(window.location.search);
+document.getElementById('dom-xss-result').textContent = params.get('q');</code></pre>
+                <div class="alert alert-info mt-3">
+                    <h6>Key Points:</h6>
+                    <ul>
+                        <li>All logic is client-side, no backend involved</li>
+                        <li>Safely injects user input from URL into DOM using <code>textContent</code></li>
+                        <li>Payload is displayed as text, not executed</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // On page load, reflect ?q= param using textContent (secure)
+    const params = new URLSearchParams(window.location.search);
+    const q = params.get('q');
+    if (q) {
+        document.getElementById('dom-xss-result').textContent = q;
+    }
+    // Form handler
+    document.getElementById('searchForm').onsubmit = function(e) {
+        e.preventDefault();
+        const value = document.getElementById('searchInput').value;
+        window.location.search = '?q=' + encodeURIComponent(value);
+    };
+</script>
+
+<%- include('partials/footer') %> 

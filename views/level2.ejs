@@ -1,0 +1,92 @@
+<%- include('partials/header', { title: 'Level 2 - Stored XSS' }) %>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header bg-danger text-white">
+                <h5 class="mb-0">Vulnerable Version</h5>
+            </div>
+            <div class="card-body">
+                <h6 class="card-subtitle mb-2 text-muted">Comment System (Vulnerable)</h6>
+                <form action="/level2" method="POST" class="mb-3">
+                    <div class="form-group">
+                        <textarea name="comment" class="form-control" rows="3" placeholder="Write a comment..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-2">Post Comment</button>
+                </form>
+                <div id="vulnerable-comments" class="mt-3">
+                    <% comments.forEach(function(comment) { %>
+                        <div class="card mb-2">
+                            <div class="card-body">
+                                <div class="vulnerable-comment"><%- comment.text %></div>
+                                <small class="text-muted"><%= comment.timestamp %></small>
+                            </div>
+                        </div>
+                    <% }); %>
+                </div>
+                <div class="mt-3">
+                    <h6>Try this payload:</h6>
+                    <code>&lt;img src="x" onerror="alert('XSS')"&gt;</code>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">Secure Version</h5>
+            </div>
+            <div class="card-body">
+                <h6 class="card-subtitle mb-2 text-muted">Comment System (Secure)</h6>
+                <form action="/level2" method="POST" class="mb-3">
+                    <div class="form-group">
+                        <textarea name="comment" class="form-control" rows="3" placeholder="Write a comment..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-2">Post Comment</button>
+                </form>
+                <div id="secure-comments" class="mt-3">
+                    <% comments.forEach(function(comment) { %>
+                        <div class="card mb-2">
+                            <div class="card-body">
+                                <div class="secure-comment"><%= comment.text %></div>
+                                <small class="text-muted"><%= comment.timestamp %></small>
+                            </div>
+                        </div>
+                    <% }); %>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">How It Works</h5>
+            </div>
+            <div class="card-body">
+                <h6>Vulnerable Version:</h6>
+                <pre><code>// Vulnerable code uses &lt;%- %&gt; to render HTML
+&lt;div class="vulnerable-comment"&gt;&lt;%- user input %&gt;&lt;/div&gt;</code></pre>
+
+                <h6>Secure Version:</h6>
+                <pre><code>// Secure code uses &lt;%= %&gt; to escape HTML
+&lt;div class="secure-comment"&gt;&lt;%= user input %&gt;&lt;/div&gt;</code></pre>
+
+                <div class="alert alert-info mt-3">
+                    <h6>Key Points:</h6>
+                    <ul>
+                        <li>The vulnerable version uses <code>&lt;%- %&gt;</code> which renders HTML without escaping</li>
+                        <li>The secure version uses <code>&lt;%= %&gt;</code> which automatically escapes HTML</li>
+                        <li>Always use HTML escaping when displaying user-generated content</li>
+                        <li>Consider using a sanitization library if you need to allow some HTML tags</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('partials/footer') %> 

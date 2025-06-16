@@ -1,59 +1,59 @@
-# XSS Lab - Educational Web Application
+# 🧪 XSS Lab - Educational Web Application
 
 A full-stack web application that serves as an educational lab for demonstrating Cross-Site Scripting (XSS) vulnerabilities and their secure mitigations. This project is designed to help developers understand different types of XSS attacks and learn how to prevent them.
 
-## Features
+## ✨ Features
 
 - Several levels of XSS vulnerabilities and their secure implementations:
-  1. Reflected XSS
-  2. Stored XSS
-  3. JavaScript Attribute Injection
-  4. DOM-Based XSS
-  5. XSS via `eval()`
-  6. DOM-Based XSS via JavaScript Context
-- Side-by-side comparison of vulnerable and secure code
-- Interactive examples with payload suggestions
-- Educational explanations and best practices
-- Modern, responsive UI using Bootstrap
+  1.  **Reflected XSS** 🕵️
+  2.  **Stored XSS** 💾
+  3.  **JavaScript Attribute Injection** ⚙️
+  4.  **DOM-Based XSS** 🌍
+  5.  **XSS via `eval()`** ☢️
+  6.  **DOM-Based XSS via JavaScript Context (Follow the Rabbit)** 🐇
+- Side-by-side comparison of vulnerable and secure code ⚖️
+- Interactive examples with payload suggestions 💡
+- Educational explanations and best practices 📚
+- Modern, responsive UI using Bootstrap 📱
 
-## Prerequisites
+## 📋 Prerequisites
 
-- Node.js (v14 or higher)
-- npm (v6 or higher)
+- Node.js (v14 or higher) 🟢
+- npm (v6 or higher) 📦
 
-## Setup and Installation
+## 🚀 Setup and Installation
 
 To set up this project from scratch or to run it after cloning:
 
-1.  **Clone the repository (if not already done):**
+1.  **Clone the repository (if not already done):** ⬇️
     ```bash
-    git clone https://github.com/yamneg96/repo-name.git
+    git clone https://github.com/yamneg96/WEB-XSS-LAB.git
     cd vulnerableVSsecure
-    ```* 
+    ```*
 
-2.  **Initialize the Node.js project (if starting from scratch):**
+2.  **Initialize the Node.js project (if starting from scratch):** 🏗️
     ```bash
     npm init -y
     ```
     *This command creates a `package.json` file.*
 
-3.  **Install dependencies:**
+3.  **Install dependencies:** 💾
     ```bash
     npm install express ejs body-parser express-session sanitize-html nodemon
     ```
     *Alternatively, if `package.json` already exists, simply run `npm install`.*
 
-4.  **Start the application:**
+4.  **Start the application:** ▶️
     ```bash
     npm start
     ```
 
-5.  **Open your browser and navigate to:**
+5.  **Open your browser and navigate to:** 🌐
     ```
     http://localhost:3000
     ```
 
-## Project Structure
+## 📁 Project Structure
 
 ```
 /vulnerableVSsecure
@@ -84,37 +84,37 @@ To set up this project from scratch or to run it after cloning:
   README.md
 ```
 
-## Security Warning
+## ⚠️ Security Warning 🚨
 
-⚠️ **IMPORTANT**: This application is intentionally vulnerable to XSS attacks for educational purposes. The vulnerable versions are designed to demonstrate security risks. Never implement these vulnerable patterns in production code.
+**IMPORTANT**: This application is intentionally vulnerable to XSS attacks for educational purposes. The vulnerable versions are designed to demonstrate security risks. Never implement these vulnerable patterns in production code.
 
-## Learning Objectives
+## 🎯 Learning Objectives
 
 1.  **Reflected XSS**
-    - Understanding how user input can be reflected in the page
-    - Learning to use `textContent` instead of `innerHTML`
-    - Implementing proper input sanitization
+    - Understanding how user input can be reflected in the page 🤔
+    - Learning to use `textContent` instead of `innerHTML` ✅
+    - Implementing proper input sanitization 🧹
 
 2.  **Stored XSS**
-    - Understanding persistent XSS attacks
-    - Learning to escape HTML content
-    - Implementing proper data sanitization
+    - Understanding persistent XSS attacks 👻
+    - Learning to escape HTML content ✍️
+    - Implementing proper data sanitization 🧼
 
 3.  **JavaScript Attribute Injection**
-    - Understanding JavaScript injection vulnerabilities
-    - Learning input validation and type checking
-    - Implementing secure event handling
+    - Understanding JavaScript injection vulnerabilities 💉
+    - Learning input validation and type checking 🔍
+    - Implementing secure event handling 🛡️
 
 4.  **DOM-Based XSS**
-    - See how client-side JavaScript can create XSS vulnerabilities without server interaction.
+    - See how client-side JavaScript can create XSS vulnerabilities without server interaction. 🖥️
 
 5.  **XSS via `eval()`**
-    - Understand the dangers of using `eval()` with untrusted user input.
+    - Understand the dangers of using `eval()` with untrusted user input. 💥
 
 6.  **DOM-Based XSS via JavaScript Context (Follow the Rabbit)**
-    - Exploit DOM-based XSS where the payload is injected directly into JavaScript code from URL parameters.
+    - Exploit DOM-based XSS where the payload is injected directly into JavaScript code from URL parameters. 🐰
 
-## Best Practices Demonstrated
+## ✅ Best Practices Demonstrated
 
 - Using `textContent` instead of `innerHTML`
 - Implementing proper HTML escaping
@@ -124,10 +124,10 @@ To set up this project from scratch or to run it after cloning:
 - Content Security Policy (CSP) considerations
 - Safe handling of URL parameters in JavaScript
 
-## Contributing
+## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are welcome! Please feel free to submit a Pull Request. ✨
 
-## License
+## ⚖️ License
 
 This project is licensed under the MIT License - see the LICENSE file for details. 

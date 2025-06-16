@@ -1,0 +1,97 @@
+<%- include('partials/header', { title: 'Level 3 - JS Attribute Injection (Vulnerable)', mode: 'vulnerable' }) %>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card mb-4">
+            <div class="card-header bg-danger text-white d-flex justify-content-between align-items-center">
+                <span>Vulnerable Version</span>
+                <a href="/level3/secure" class="btn btn-outline-light btn-sm">Go to Secure Version</a>
+            </div>
+            <div class="card-body">
+                <h6 class="card-subtitle mb-2 text-muted">Timer (Vulnerable)</h6>
+                <form id="level3VulnerableForm" class="mb-3">
+                    <div class="input-group">
+                        <input type="text" id="level3VulnerableInput" name="timer" class="form-control" placeholder="Enter seconds...">
+                        <button class="btn btn-primary" type="submit">Create Timer</button>
+                    </div>
+                </form>
+                <div id="vulnerable-timer" class="mt-3"></div>
+                <div class="mt-3">
+                    <h6>Try this payload:</h6>
+                    <code>3');alert('XSS Level 3: Attribute Injection')</code>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">How It Works</h5>
+            </div>
+            <div class="card-body">
+                <h6>Vulnerable Version:</h6>
+                <pre><code>// Vulnerable code uses data-attribute + eval()
+&lt;div data-payload="&lt;user input&gt;"&gt;&lt;/div&gt;
+const payload = element.getAttribute('data-payload');
+eval("startTimer(" + payload + ")");</code></pre>
+                <div class="alert alert-info mt-3">
+                    <h6>Key Points:</h6>
+                    <ul>
+                        <li>User input is stored in a data attribute.</li>
+                        <li>Client-side JavaScript retrieves this data and uses <code>eval()</code>.</li>
+                        <li>This demonstrates XSS via explicit code execution from an attribute.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function startTimer(seconds) {
+    let countdown = seconds;
+    const display = document.getElementById('vulnerable-timer');
+    display.innerHTML = `Timer: <span id="vulnerable-countdown">${countdown}</span>s`;
+
+    const timer = setInterval(() => {
+        countdown--;
+        if (countdown >= 0) {
+            document.getElementById('vulnerable-countdown').textContent = countdown;
+        } else {
+            clearInterval(timer);
+            display.textContent = 'Done!';
+        }
+    }, 1000);
+}
+
+document.getElementById('level3VulnerableForm').onsubmit = function(e) {
+    e.preventDefault();
+    const userInput = document.getElementById('level3VulnerableInput').value;
+    
+    console.log("Level 3 Vulnerable (Step 1): User Input from form:", userInput);
+
+    // Simulate storing and retrieving the payload, then evaluating it
+    const dummyDiv = document.createElement('div');
+    // To ensure the payload is *not* HTML-encoded when set as an attribute
+    dummyDiv.innerHTML = `<span data-payload="${userInput}"></span>`; 
+    const payloadToExecute = dummyDiv.querySelector('span').getAttribute('data-payload');
+
+    console.log("Level 3 Vulnerable (Step 2): Payload retrieved from data-attribute:", payloadToExecute);
+
+    const evalString = "startTimer(" + payloadToExecute + ")";
+
+    console.log("Level 3 Vulnerable (Step 3): String passed to eval():", evalString);
+
+    try {
+        eval(evalString);
+    } catch (e) {
+        console.error("Error executing Level 3 payload:", e);
+        document.getElementById('vulnerable-timer').innerHTML = `<div class="alert alert-danger">Error: ${e.message}</div>`;
+    }
+};
+</script>
+
+<%- include('partials/footer') %> 
